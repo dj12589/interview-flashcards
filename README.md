@@ -1,2 +1,2 @@
 # interview-flashcards
-Interview Flashcard App.
+Interview Flashcard App — Work in Progress.
