@@ -1,0 +1,31 @@
+body {
+    text-align: center;
+}
+
+h1 {
+  font-weight: lighter;
+  font-family: "Roboto", "Helvetica", "Arial", sans-serif;
+}
+
+
+.button {
+  margin-left: 49%;
+}
+
+.arrow {
+  margin-top: 50px;
+  transform: scale(3.8);
+  color: lightgreen;
+}
+
+.newPost {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+#standard-full-width {
+  text-align: center;
+  display: flex;
+  justify-content: center;
+}
