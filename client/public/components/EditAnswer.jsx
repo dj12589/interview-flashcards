@@ -8,14 +8,14 @@ import Typography from '@material-ui/core/Typography';
 import SaveIcon from '@material-ui/icons/Save';
 import TextField from '@material-ui/core/TextField';
 
-
 const useStyles = makeStyles({
   card: {
     minWidth: 275,
   },
   title: {
-    fontSize: 14,
+    fontSize: 20,
     align: 'center',
+    marginTop: 50,
   },
   pos: {
     marginBottom: 12,
@@ -24,38 +24,39 @@ const useStyles = makeStyles({
 });
 
 
-const EditCard = function ({ placeholder, getPosts, page }) {
+const EditAnswer = function ({ placeholder, getPosts, page }) {
   const classes = useStyles();
   const update = {
-    question: '',
+    answer: '',
   };
 
   return (
     <div className="mdc-card">
       <Button variant="contained" color="primary" className={classes.button}>
-           Question in Editing Mode
+           Answer in Editing Mode
       </Button>
       <Card className={classes.card}>
         <CardContent>
-          <Typography className={classes.title} color="textSecondary" gutterBottom>
-          Behavioral Question
+          <Typography className={classes.title} color="textSecondary">
+            {placeholder[0]}
           </Typography>
-          <Typography variant="h5" component="h2">
+          <Typography>
             <TextField
               id="standard-full-width"
-              defaultValue={placeholder}
+              multiline
+              defaultValue={placeholder[1]}
               style={{ margin: 8 }}
-              placeholder={placeholder}
+              placeholder={placeholder[1]}
               margin="normal"
               fullWidth
               InputLabelProps={{
                 shrink: true,
               }}
-              onChange={(e) => { update.question = e.target.value; }}
+              onChange={(e) => { update.answer = e.target.value; }}
             />
           </Typography>
           <Typography className={classes.pos} color="textSecondary">
-            <i>Thanks for improving this question! You. Are. Awesome.</i>
+            <i>Thanks for improving this answer! You. Are. Awesome.</i>
           </Typography>
         </CardContent>
         <CardActions>
@@ -67,13 +68,13 @@ const EditCard = function ({ placeholder, getPosts, page }) {
                 headers: {
                   'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({ type: 'question', old: placeholder, new: update.question }),
+                body: JSON.stringify({ type: 'answer', old: placeholder[0], new: update.answer }),
               })
                 .then((results) => {
                   results.json();
                 })
                 .then(() => {
-                  window.alert('Question updated in database. Thanks for your edits!');
+                  window.alert('Answer updated in database. Thanks for your edits!');
                   getPosts();
                 });
             }}
@@ -84,4 +85,4 @@ const EditCard = function ({ placeholder, getPosts, page }) {
   );
 };
 
-export default EditCard;
+export default EditAnswer;

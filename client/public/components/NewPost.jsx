@@ -3,7 +3,6 @@ import { makeStyles } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 
-
 const useStyles = makeStyles((theme) => ({
   container: {
     display: 'flex',
@@ -16,7 +15,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const NewPost = function () {
+const NewPost = function ({ page }) {
   const newPost = {
     question: '',
     answer: '',
@@ -42,7 +41,7 @@ const NewPost = function () {
           color="primary"
           className={classes.button}
           onClick={() => {
-            fetch('/behavioral', {
+            fetch(`/${page}`, {
               method: 'POST',
               headers: {
                 'Content-Type': 'application/json',
@@ -52,7 +51,7 @@ const NewPost = function () {
               .then((results) => results.json())
               .then(() => {
                 window.alert('Thanks for submitting! Your question has been added to the database.');
-                Location.reload();
+                location.reload();
               });
           }}
         >
