@@ -40,21 +40,19 @@ const EditAnswer = function ({ placeholder, getPosts, page }) {
           <Typography className={classes.title} color="textSecondary">
             {placeholder[0]}
           </Typography>
-          <Typography>
-            <TextField
-              id="standard-full-width"
-              multiline
-              defaultValue={placeholder[1]}
-              style={{ margin: 8 }}
-              placeholder={placeholder[1]}
-              margin="normal"
-              fullWidth
-              InputLabelProps={{
-                shrink: true,
-              }}
-              onChange={(e) => { update.answer = e.target.value; }}
-            />
-          </Typography>
+          <TextField
+            id="standard-full-width"
+            multiline
+            defaultValue={placeholder[1]}
+            style={{ margin: 8 }}
+            placeholder={placeholder[1]}
+            margin="normal"
+            fullWidth
+            InputLabelProps={{
+              shrink: true,
+            }}
+            onChange={(e) => { update.answer = e.target.value; }}
+          />
           <Typography className={classes.pos} color="textSecondary">
             <i>Thanks for improving this answer! You. Are. Awesome.</i>
           </Typography>

@@ -37,3 +37,7 @@ h1 {
   display: inline-block;
   background-color: "blue";
 }
+
+.answerText {
+  margin-left: 49%;
+}

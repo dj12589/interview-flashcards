@@ -1,7 +1,7 @@
 const express = require('express');
 
 const app = express();
-const port = 3000;
+const port = process.env.PORT || 3000;
 const bodyParser = require('body-parser');
 const db = require('../db/db.js');
 
@@ -21,7 +21,6 @@ app.get('/behavioral', (req, res) => {
 });
 
 app.post('/behavioral', (req, res) => {
-  const { question } = req.body;
   db.BehavioralQs.create({ question: req.body.question }, (err, results) => {
     if (err) {
       res.status(404).send(err);
@@ -53,7 +52,7 @@ app.put('/behavioral', (req, res) => {
 
 app.delete('/behavioral', (req, res) => {
   const { question } = req.body;
-  db.BehavioralQs.deleteOne({ question }, (err, results) => {
+  db.BehavioralQs.deleteOne({ question }, (err) => {
     if (err) {
       res.status(404).send(err);
     } else {
@@ -65,9 +64,9 @@ app.delete('/behavioral', (req, res) => {
 app.get('/technical', (req, res) => {
   db.TechnicalQs.find({}, (err, results) => {
     if (results.length === 0) {
-      db.TechnicalQs.create({ question: 'What is a hash table?' }, (err, firstQ) => {
-        if (err) {
-          res.status(404).send(err);
+      db.TechnicalQs.create({ question: 'What is a hash table?' }, (error, firstQ) => {
+        if (error) {
+          res.status(404).send(error);
         } else {
           res.status(200).send(firstQ);
         }
@@ -115,7 +114,7 @@ app.put('/technical', (req, res) => {
 
 app.delete('/technical', (req, res) => {
   const { question } = req.body;
-  db.TechnicalQs.deleteOne({ question }, (err, results) => {
+  db.TechnicalQs.deleteOne({ question }, (err) => {
     if (err) {
       res.status(404).send(err);
     } else {
@@ -127,8 +126,8 @@ app.delete('/technical', (req, res) => {
 app.get('/systemdesign', (req, res) => {
   db.SystemDesignQs.find({}, (err, results) => {
     if (results.length === 0) {
-      db.SystemDesignQs.create({ question: 'System design question' }, (err, firstQ) => {
-        if (err) {
+      db.SystemDesignQs.create({ question: 'System design question' }, (error, firstQ) => {
+        if (error) {
           res.status(404).send(err);
         } else {
           res.status(200).send(firstQ);
@@ -175,7 +174,7 @@ app.put('/systemdesign', (req, res) => {
 
 app.delete('/systemdesign', (req, res) => {
   const { question } = req.body;
-  db.SystemDesignQs.deleteOne({ question }, (err, results) => {
+  db.SystemDesignQs.deleteOne({ question }, (err) => {
     if (err) {
       res.status(404).send(err);
     } else {

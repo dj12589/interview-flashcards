@@ -14,12 +14,17 @@ class App extends React.Component {
     this.state = {
       type: 'behavioral',
       qOrA: 'question',
+      renderFlashcard: 'yes',
     };
     this.getPosts = this.getPosts.bind(this);
     this.newPost = this.newPost.bind(this);
     this.updatePost = this.updatePost.bind(this);
     this.deletePost = this.deletePost.bind(this);
     this.changeNav = this.changeNav.bind(this);
+  }
+
+  componentDidMount() {
+    this.getPosts();
   }
 
   getPosts() {
@@ -30,10 +35,6 @@ class App extends React.Component {
           questions: results,
         });
       });
-  }
-
-  componentDidMount() {
-    this.getPosts();
   }
 
   newPost() {
@@ -52,7 +53,6 @@ class App extends React.Component {
       });
     } else if (section === 'answer') {
       const paraText = e.target.parentNode.parentNode.getElementsByClassName('answerText')[0].innerHTML;
-
       this.setState({
         qOrA: 'answer',
         editPost: [currentText, paraText],
@@ -60,7 +60,7 @@ class App extends React.Component {
     }
   }
 
-  deletePost(e) {
+  deletePost() {
     const currentText = {
       question: document.getElementsByTagName('h2')[0].innerText,
     };
@@ -82,10 +82,11 @@ class App extends React.Component {
       .then((res) => res.json())
       .then((results) => {
         this.setState({
+          newPost: 'no',
           type: currentField || this.state.type,
           questions: results,
-          qOrA: 'question',
           editPost: null,
+          renderFlashcard: 'yes',
         });
       });
   }
@@ -98,8 +99,13 @@ class App extends React.Component {
           <h1>Practice Makes Perfect.</h1>
           <AddButton getNewPost={this.newPost} />
           <NewPost className="newPost" getPosts={this.getPosts} page={this.state.type} />
-          <Flashcard className="flashcard" editPost={this.updatePost} deletePost={this.deletePost} q={this.state.questions} page={this.state.type} />
-          <ArrowForwardIcon className="arrow" color="primary" onClick={() => this.changeNav(this.state.type)} />
+          <ArrowForwardIcon
+            className="arrow"
+            color="primary"
+            onClick={() => {
+              this.changeNav(this.state.type);
+            }}
+          />
         </div>
       );
     } if (this.state.editPost) {
@@ -122,16 +128,17 @@ class App extends React.Component {
           </div>
         );
       }
+    } else if (this.state.renderFlashcard) {
+      return (
+
+        <div>
+          <NavBar id="navbar" changeNav={this.changeNav} />
+          <h1>Practice Makes Perfect.</h1>
+          <AddButton getNewPost={this.newPost} />
+          <Flashcard className="flashcard" updatePost={this.updatePost} deletePost={this.deletePost} q={this.state.questions} page={this.state.type} />
+        </div>
+      );
     }
-    return (
-      <div>
-        <NavBar id="navbar" changeNav={this.changeNav} />
-        <h1>Practice Makes Perfect.</h1>
-        <AddButton getNewPost={this.newPost} />
-        <Flashcard className="flashcard" editPost={this.updatePost} deletePost={this.deletePost} q={this.state.questions} page={this.state.type} />
-        <ArrowForwardIcon className="arrow" color="primary" onClick={() => this.changeNav(this.state.type)} />
-      </div>
-    );
   }
 }
 

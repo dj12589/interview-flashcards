@@ -11,7 +11,7 @@ import Collapse from '@material-ui/core/Collapse';
 import { red } from '@material-ui/core/colors';
 import IconButton from '@material-ui/core/IconButton';
 import clsx from 'clsx';
-
+import ArrowForwardIcon from '@material-ui/icons/ArrowForward';
 
 const useStyles = makeStyles((theme) => ({
   card: {
@@ -37,96 +37,127 @@ const useStyles = makeStyles((theme) => ({
       duration: theme.transitions.duration.shortest,
     }),
   },
-  expandOpen: {
-    transform: 'rotate(180deg)',
-  },
+
   avatar: {
     backgroundColor: red[500],
   },
 }));
 
+let storage = {}
+
 
 const Flashcard = function ({
-  q, editPost, deletePost, page,
+  q, updatePost, deletePost, page, reset
 }) {
+  if (q && updatePost && deletePost && page) {
+    storage.q = q
+    storage.updatePost = updatePost
+    storage.deletePost = deletePost
+    }
+    let alreadyRendered = false;
+
   const classes = useStyles();
   const [expanded, setExpanded] = React.useState(false);
   const [currentQuestion, setQuestion] = React.useState(null);
+  const [yesOrNo, stayOnQuestion] = React.useState('no')
 
-  const handleExpandClick = (currentQuestion) => {
+  const handleExpandClick = (currentQuestion, yesOrNo) => {
     setExpanded(!expanded);
     setQuestion(currentQuestion);
+    stayOnQuestion(yesOrNo)
   };
 
-  if (q) {
-    const randomIndex = Math.floor(Math.random() * Math.floor(q.length));
-    const randomQuestion = q[randomIndex];
+  const handleArrowClick = (currentQuestion, yesOrNo) => {
+    if (expanded === true) {
+      setExpanded(!expanded)
+    }
+    setQuestion(currentQuestion);
+    stayOnQuestion(yesOrNo)
+  };
 
-    return (q.map((question) => {
-      if (currentQuestion === question.question) {
+  if (storage.q) {
+      const randomIndex = Math.floor(Math.random() * Math.floor(storage.q.length));
+      const randomQuestion = storage.q[randomIndex];
+
+    let currentQuestions = [];
+
+    for (let i = 0; i < storage.q.length; i++) {
+      currentQuestions.push(storage.q[i].question)
+    }
+
+      if (yesOrNo === 'yes' && alreadyRendered === false) {
+        alreadyRendered = true;
         return (
-          <Card className={classes.card}>
+        <div>
+        <div>
+        <Card className={classes.card}>
+          <CardContent>
+            <Typography variant="h5" component="h2">
+              {currentQuestion.question}
+            </Typography>
+            <Typography className={classes.pos} color="textSecondary">
+              <i>You got this.</i>
+            </Typography>
+          </CardContent>
+          <CardActions>
+            <EditIcon className="button question" onClick={(e) => updatePost(e, 'question')} />
+            <DeleteIcon className="button question" onClick={(e) => deletePost(e)} />
+            <IconButton
+              className={clsx(classes.expand, {
+                [classes.expandOpen]: expanded,
+              })}
+              onClick={() => {
+                handleExpandClick(currentQuestion, 'yes');
+              }}
+              aria-expanded={expanded}
+              aria-label="show more"
+            >
+              <ExpandMoreIcon />
+            </IconButton>
+          </CardActions>
+          <Collapse in={expanded} timeout="auto" unmountOnExit>
             <CardContent>
-              <Typography variant="h5" component="h2">
-                {question.question}
+              <Typography paragraph className="answerText">
+                {currentQuestion.answer}
               </Typography>
-              <Typography className={classes.pos} color="textSecondary">
-                <i>You got this.</i>
-              </Typography>
-              <Typography variant="body2" component="p" />
+              <CardActions>
+                <EditIcon className="answerText" onClick={(e) => updatePost(e, 'answer')} />
+              </CardActions>
             </CardContent>
-            <CardActions>
-              <EditIcon className="button question" onClick={(e) => editPost(e, 'question')} />
-              <DeleteIcon className="button question" onClick={(e) => deletePost(e)} />
-              <IconButton
-                className={clsx(classes.expand, {
-                  [classes.expandOpen]: expanded,
-                })}
-                onClick={() => {
-                  handleExpandClick(question.question);
-                }}
-                aria-expanded={expanded}
-                aria-label="show more"
-              >
-                <ExpandMoreIcon />
-              </IconButton>
-            </CardActions>
-            <Collapse in={expanded} timeout="auto" unmountOnExit>
-              <CardContent>
-                <Typography paragraph className="answerText">
-                  {question.answer}
-                </Typography>
+          </Collapse>
+        </Card>
+        </div>
+        <ArrowForwardIcon className="arrow" color="primary" onClick={() => {
+          const randomIndex = Math.floor(Math.random() * Math.floor(storage.q.length));
+          const randomQuestion = storage.q[randomIndex];
+          handleArrowClick(randomQuestion, 'no')
 
-                <CardActions>
-                  <EditIcon className="button answerText" onClick={(e) => editPost(e, 'answer')} />
-                </CardActions>
-              </CardContent>
-            </Collapse>
+        }} />
+        </div>
+      )
+    } else if (alreadyRendered === false) {
+              alreadyRendered = true;
 
-          </Card>
-        );
-      } if (currentQuestion === null) {
-        if (randomQuestion.question === question.question) {
-          return (
+            return (
+            <div>
             <Card className={classes.card}>
               <CardContent>
                 <Typography variant="h5" component="h2">
-                  {question.question}
+                  {randomQuestion.question}
                 </Typography>
                 <Typography className={classes.pos} color="textSecondary">
                   <i>You got this.</i>
                 </Typography>
-                <Typography variant="body2" component="p" />
               </CardContent>
               <CardActions>
-                <EditIcon className="button question" onClick={(e) => editPost(e, 'question')} />
+                <EditIcon className="button question" onClick={(e) => updatePost(e, 'question')} />
                 <DeleteIcon className="button question" onClick={(e) => deletePost(e)} />
                 <IconButton
                   className={clsx(classes.expand, {
                     [classes.expandOpen]: expanded,
                   })}
                   onClick={() => {
-                    handleExpandClick(question.question);
+                    handleExpandClick(randomQuestion, 'yes');
                   }}
                   aria-expanded={expanded}
                   aria-label="show more"
@@ -137,17 +168,22 @@ const Flashcard = function ({
               <Collapse in={expanded} timeout="auto" unmountOnExit>
                 <CardContent>
                   <Typography paragraph className="answerText">
-                    {question.answer}
+                    {randomQuestion.answer}
                   </Typography>
-                  <EditIcon className="button answerText" onClick={(e) => editPost(e, 'answer')} />
+                  <EditIcon className="answerText" onClick={(e) => updatePost(e, 'answer')} />
                 </CardContent>
               </Collapse>
-
             </Card>
-          );
+              <ArrowForwardIcon className="arrow" color="primary" onClick={() => {
+                const randomIndex = Math.floor(Math.random() * Math.floor(storage.q.length));
+                const randomQuestion = storage.q[randomIndex];
+                handleArrowClick(randomQuestion, 'no')
+                }} />
+              </div>
+            );
+
         }
-      }
-    }));
+
   }
   return null;
 };

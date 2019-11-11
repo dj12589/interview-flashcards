@@ -80,39 +80,42 @@ export default function NavBar({ changeNav }) {
   };
 
   return (
-      <div className={classes.root} id="navbar">
-        <AppBar position="static" color="default">
-          <Tabs
-            value={value}
-            onChange={handleChange}
-            indicatorColor="secondary"
-            textColor="primary"
-            variant="fullWidth"
-            aria-label="action tabs example"
-          >
-            <Tab
-              label="Behavioral"
-              {...a11yProps(0)}
-              onClick={() => {
-                changeNav('behavioral');
-              }}
-            />
-            <Tab
-              label="Technical Qs"
-              {...a11yProps(1)}
-              onClick={() => {
-                changeNav('technical');
-              }}
-            />
-            <Tab
-              label="System Design"
-              {...a11yProps(2)}
-              onClick={() => {
-                changeNav('systemdesign');
-              }}
-            />
-          </Tabs>
-        </AppBar>
-      </div>
+    <div className={classes.root} id="navbar">
+      <AppBar position="static" color="default">
+        <Tabs
+          value={value}
+          onChange={handleChange}
+          indicatorColor="secondary"
+          textColor="primary"
+          variant="fullWidth"
+          aria-label="action tabs example"
+        >
+          <Tab
+            label="Behavioral Qs"
+            {...a11yProps(0)}
+            onClick={(e) => {
+              handleChange(e, 0);
+              changeNav('behavioral');
+            }}
+          />
+          <Tab
+            label="Technical Qs"
+            {...a11yProps(1)}
+            onClick={(e) => {
+              handleChange(e, 1);
+              changeNav('technical');
+            }}
+          />
+          <Tab
+            label="System Design Qs"
+            {...a11yProps(2)}
+            onClick={(e) => {
+              handleChange(e, 2);
+              changeNav('systemdesign');
+            }}
+          />
+        </Tabs>
+      </AppBar>
+    </div>
   );
 }
