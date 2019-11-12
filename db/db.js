@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 
 const db = mongoose.connection;
 
-mongoose.connect('mongodb://localhost/flashcards', { useNewUrlParser: true });
+mongoose.connect(process.env.MONGO_URI, { useNewUrlParser: true });
 
 db.on('error', console.error.bind(console, 'connection error:'));
 db.once('open', () => {
